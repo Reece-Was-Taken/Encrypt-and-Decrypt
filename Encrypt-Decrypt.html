@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Encrypt/Decrypt Base64, Hex, and Binary</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #2e2e2e;
+        }
+        .container {
+            text-align: center;
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            outline: #571313 solid 5px
+        }
+        textarea, select, button {
+            width: 300px;
+            margin-bottom: 10px;
+        }
+        textarea {
+            height: 100px;
+        }
+        button {
+            margin: 5px;
+            padding: 10px 20px;
+            background-color: #571313;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #2b0404;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Encrypt/Decrypt Base64, Hex, and Binary</h2>
+        <textarea id="inputText" placeholder="Enter text here..."></textarea><br>
+        <select id="encodingType">
+            <option value="base64">Base64</option>
+            <option value="hex">Hexadecimal</option>
+            <option value="binary">Binary</option>
+        </select><br>
+        <button onclick="encrypt()">Encrypt</button>
+        <button onclick="decrypt()">Decrypt</button>
+        <h3>Result:</h3>
+        <textarea id="resultText" readonly></textarea>
+    </div>
+
+    <script>
+        // Function to encrypt
+        function encrypt() {
+            const input = document.getElementById('inputText').value;
+            const encodingType = document.getElementById('encodingType').value;
+            let result = '';
+
+            if (encodingType === 'base64') {
+                result = btoa(input); // Base64 encode
+            } else if (encodingType === 'hex') {
+                result = textToHex(input); // Hex encode
+            } else if (encodingType === 'binary') {
+                result = textToBinary(input); // Binary encode
+            }
+
+            document.getElementById('resultText').value = result;
+        }
+
+        // Function to decrypt
+        function decrypt() {
+            const input = document.getElementById('inputText').value;
+            const encodingType = document.getElementById('encodingType').value;
+            let result = '';
+
+            try {
+                if (encodingType === 'base64') {
+                    result = atob(input); // Base64 decode
+                } else if (encodingType === 'hex') {
+                    result = hexToText(input); // Hex decode
+                } else if (encodingType === 'binary') {
+                    result = binaryToText(input); // Binary decode
+                }
+            } catch (e) {
+                result = 'Invalid input!';
+            }
+
+            document.getElementById('resultText').value = result;
+        }
+
+        function textToHex(text) {
+            return text.split('').map(char => char.charCodeAt(0).toString(16).padStart(2, '0')).join('');
+        }
+
+        function hexToText(hex) {
+            let text = '';
+            for (let i = 0; i < hex.length; i += 2) {
+                text += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
+            }
+            return text;
+        }
+
+        function textToBinary(text) {
+            return text.split('').map(char => char.charCodeAt(0).toString(2).padStart(8, '0')).join(' ');
+        }
+
+        function binaryToText(binary) {
+            return binary.split(' ').map(bin => String.fromCharCode(parseInt(bin, 2))).join('');
+        }
+    </script>
+</body>
+</html>
